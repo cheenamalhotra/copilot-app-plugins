@@ -9,9 +9,9 @@ SKILLS_DIR="$COPILOT_HOME/skills/worktree-janitor"
 command -v node >/dev/null || { echo "node is required"; exit 1; }
 command -v sqlite3 >/dev/null || { echo "sqlite3 is required"; exit 1; }
 
-# 1. Skill: symlinked so it's auto-discovered, same mechanism as other user skills.
+# 1. Skill: copied (not symlinked — Copilot App rejects symlinked skill files).
 mkdir -p "$SKILLS_DIR"
-ln -sf "$PLUGIN_DIR/skills/worktree-janitor/SKILL.md" "$SKILLS_DIR/SKILL.md"
+cp "$PLUGIN_DIR/skills/worktree-janitor/SKILL.md" "$SKILLS_DIR/SKILL.md"
 
 # 2. MCP server: registered in mcp-config.json (Copilot App's user-level MCP registry).
 # Copilot App's "Plugins" marketplace UI is not used here — it requires a signed
