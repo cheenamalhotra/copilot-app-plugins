@@ -1,0 +1,23 @@
+{
+  "name": "worktree-janitor-marketplace",
+  "metadata": {
+    "description": "Local marketplace for the worktree-janitor plugin.",
+    "version": "1.0.0"
+  },
+  "owner": {
+    "name": "Cheena Malhotra"
+  },
+  "plugins": [
+    {
+      "name": "worktree-janitor",
+      "source": "./",
+      "description": "Finds obsolete git worktrees left behind by Copilot App sessions, runs on a schedule, and deletes only what you select and confirm.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Cheena Malhotra"
+      },
+      "keywords": ["worktree", "cleanup", "git", "maintenance", "disk-space"],
+      "license": "MIT"
+    }
+  ]
+}
