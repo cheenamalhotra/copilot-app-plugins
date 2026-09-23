@@ -8,12 +8,18 @@ They are never cleaned up automatically, so they accumulate — often tens of gi
 
 ## Install
 
+Works on macOS, Linux, and Windows.
+
 ```bash
-./install.sh
+./install.sh          # macOS / Linux
+```
+```powershell
+.\install.ps1          # Windows
 ```
 
-This symlinks the plugin into `~/.copilot/installed-plugins/_direct/worktree-janitor`.
-Restart Copilot App to pick up the MCP server and skill.
+Both scripts just check prerequisites and print the steps: open Copilot App ->
+Plugins -> Manage marketplaces -> Add source -> this folder's path -> install
+"worktree-janitor" -> restart Copilot App.
 
 ## Use
 
@@ -77,23 +83,29 @@ node bin/janitor.mjs schedule uninstall
 
 ## Schedule
 
-`schedule install` writes a launchd agent at
-`~/Library/LaunchAgents/com.github.copilot.worktree-janitor.plist` that runs a scan on an
-interval and posts a macOS notification when candidates are found. The result lands in
-`last-report.json`, which Copilot reads instantly via `get_last_report`.
+`schedule install` registers a scheduled scan on an interval and posts a notification when
+candidates are found. The result lands in `last-report.json`, which Copilot reads instantly
+via `get_last_report`. Backend is picked automatically per OS:
+
+| OS | Mechanism | Notification |
+| --- | --- | --- |
+| macOS | launchd agent (`~/Library/LaunchAgents/…plist`) | `osascript` banner |
+| Linux | systemd `--user` timer, falls back to crontab | `notify-send` (if present) |
+| Windows | Scheduled Task (`schtasks`) | PowerShell balloon tip |
 
 ## Files
 
 ```
-plugin.json                    plugin manifest
+.claude-plugin/plugin.json     plugin manifest
+.claude-plugin/marketplace.json local marketplace listing (for "Add source")
 .mcp.json                      MCP server registration
 mcp/server.mjs                 MCP stdio server (9 tools, zero dependencies)
 bin/janitor.mjs                CLI entry point, also used by the scheduler
 lib/scan.mjs                   discovery + classification
 lib/actions.mjs                delete / keep, with salvage
-lib/appdb.mjs                  read-only snapshot of the Copilot App database
+lib/appdb.mjs                  read-only snapshot of the Copilot App database (node:sqlite)
 lib/git.mjs                    async git helpers
-lib/schedule.mjs               launchd agent management
+lib/schedule.mjs               per-OS scheduler (launchd / systemd+cron / schtasks)
 skills/worktree-janitor/       skill that drives the review-and-confirm flow
 ```
 
@@ -102,4 +114,7 @@ State lives in `~/.copilot/plugin-data/_direct/worktree-janitor/`:
 
 ## Requirements
 
-macOS, Node 18+, `git`, `sqlite3`. All shipped with the system or already required by Copilot App.
+- Node 18+ (Node 22+ preferred — uses the built-in `node:sqlite` module; on
+  older Node it falls back to the `sqlite3` CLI, so install that instead)
+- `git` on PATH
+- macOS, Linux, or Windows

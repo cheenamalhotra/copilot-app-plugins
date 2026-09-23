@@ -46,7 +46,7 @@ Deleting a worktree is irreversible, so this skill is **select-and-confirm by de
 
 ## Scheduling
 
-`configure_schedule` installs a macOS launchd agent that scans in the background and posts a notification when candidates pile up. Scheduled runs **never delete anything** — they only refresh the report for the user to review later.
+`configure_schedule` installs a background scan (launchd on macOS, systemd/cron on Linux, Task Scheduler on Windows) that runs on an interval and posts a notification when candidates pile up. Scheduled runs **never delete anything** — they only refresh the report for the user to review later.
 
 Default interval is 24h:
 

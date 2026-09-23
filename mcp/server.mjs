@@ -102,13 +102,13 @@ const TOOLS = [
   },
   {
     name: 'configure_schedule',
-    description: 'Install, remove, or inspect the recurring background scan (macOS launchd agent).',
+    description: 'Install, remove, or inspect the recurring background scan (launchd / systemd+cron / Task Scheduler).',
     inputSchema: {
       type: 'object',
       properties: {
         action: { type: 'string', enum: ['install', 'uninstall', 'status'] },
         intervalHours: { type: 'number', description: 'How often to scan. Default 24.' },
-        notify: { type: 'boolean', description: 'Send a macOS notification when cleanup candidates are found.' },
+        notify: { type: 'boolean', description: 'Send a notification when cleanup candidates are found.' },
       },
       required: ['action'],
     },
