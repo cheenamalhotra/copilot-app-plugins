@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "worktree-janitor": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/mcp/server.mjs"],
+      "cwd": "${PLUGIN_ROOT}",
+      "tools": ["*"]
+    }
+  }
+}

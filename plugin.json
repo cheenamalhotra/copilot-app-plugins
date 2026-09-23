@@ -1,0 +1,12 @@
+{
+  "name": "worktree-janitor",
+  "description": "Finds obsolete git worktrees left behind by Copilot App sessions, runs on a schedule, and deletes only what you select and confirm.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Cheena Malhotra"
+  },
+  "license": "MIT",
+  "keywords": ["worktree", "cleanup", "git", "maintenance", "disk-space"],
+  "mcpServers": "./.mcp.json",
+  "skills": ["skills/worktree-janitor/"]
+}
