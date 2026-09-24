@@ -25,7 +25,7 @@ Ask Copilot in any session:
 
 | Tool | Use |
 | --- | --- |
-| `list_priorities` | Builds the markdown summary, grouped by repo. |
+| `list_priorities` | Builds the actionable markdown report (summary, Do next, tables). |
 | `get_config` / `set_config` | Change the ordered `priorityLabels` or `waitingLabels` list. |
 
 ## How it works
@@ -47,6 +47,30 @@ Every item shows a best-effort **status**:
 Items are sorted by priority rank: the label's position in your configured
 `priorityLabels` list (default `["P0","P1","P2","priority","critical"]`) — first
 in the list is highest priority. Items with no matching label sort last.
+
+## Output
+
+The report leads with a summary and a **Do next** shortlist, then full tables:
+
+```
+# My priorities
+
+_Generated ... · repos: 9 · priority labels: P0, P1, P2, priority, critical_
+
+**Summary:** 9 assigned issues | 28 review requests | 1 changes requested | 3 drafts | 0 pickable
+
+## Do next
+(changes-requested PRs, then review-requested PRs, then unstarted assigned issues — top 10)
+
+## Assigned issues (9)
+(table: Repo | # | Status | Title — open issues first, then has-PR, then waiting)
+
+## Awaiting review (28)
+(table, sorted: changes-requested > review-requested > approved > draft)
+
+## Open priority issues to pick up (0)
+_None found._
+```
 
 This plugin only lists candidates — it does not self-assign anything for you.
 Assign yourself on GitHub once you've picked one up.

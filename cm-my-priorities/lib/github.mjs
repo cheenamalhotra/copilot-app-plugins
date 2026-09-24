@@ -62,17 +62,17 @@ const ISSUE_FIELDS = 'number,title,url,labels,updatedAt,closedByPullRequestsRefe
 const PR_FIELDS = 'number,title,url,labels,updatedAt,isDraft,reviewDecision';
 
 /**
- * For each repo, gathers:
+ * Gathers, across all repos combined:
  *  - assigned: open issues assigned to you
  *  - reviewRequested: open PRs where your review is requested
  *  - pickable: open, unassigned issues matching a priority label
- * Each item carries a `rank` (label index, -1 = unranked) for sorting and a `status`
- * (e.g. "Has PR #123", "Waiting for customer", "Draft", "Review requested"). Results
- * within each bucket are sorted by rank ascending (unranked last).
+ * Each item carries `repo`, a `rank` (label index, -1 = unranked), `updatedAt`, and a
+ * `status` (e.g. "Has PR #123", "Waiting for customer", "Draft", "Review requested").
+ * Unsorted — callers decide ordering.
  */
 export function gatherPriorities(repos, priorityLabels, waitingLabels) {
-  const byRepo = new Map();
-  if (!hasGh()) return byRepo;
+  const result = { assigned: [], reviewRequested: [], pickable: [] };
+  if (!hasGh()) return result;
 
   for (const repo of repos) {
     const assigned = ghJson(['issue', 'list', '-R', repo, '--assignee', '@me', '--state', 'open', '--json', ISSUE_FIELDS, '--limit', '50']);
@@ -82,37 +82,30 @@ export function gatherPriorities(repos, priorityLabels, waitingLabels) {
     );
 
     const toIssueItem = (i) => ({
+      repo,
       number: i.number,
       title: i.title,
       url: i.url,
       labels: labelNames(i.labels),
       rank: priorityRank(i.labels, priorityLabels),
+      updatedAt: i.updatedAt,
       status: issueStatus(i, waitingLabels),
     });
 
     const toPrItem = (i) => ({
+      repo,
       number: i.number,
       title: i.title,
       url: i.url,
       labels: labelNames(i.labels),
       rank: priorityRank(i.labels, priorityLabels),
+      updatedAt: i.updatedAt,
       status: prStatus(i),
     });
 
-    const bySortedRank = (items) => items.sort((a, b) => {
-      const ra = a.rank < 0 ? Infinity : a.rank;
-      const rb = b.rank < 0 ? Infinity : b.rank;
-      return ra - rb;
-    });
-
-    const entry = {
-      assigned: bySortedRank(assigned.map(toIssueItem)),
-      reviewRequested: bySortedRank(reviewRequested.map(toPrItem)),
-      pickable: bySortedRank(pickable.map(toIssueItem)),
-    };
-    if (entry.assigned.length || entry.reviewRequested.length || entry.pickable.length) {
-      byRepo.set(repo, entry);
-    }
+    result.assigned.push(...assigned.map(toIssueItem));
+    result.reviewRequested.push(...reviewRequested.map(toPrItem));
+    result.pickable.push(...pickable.map(toIssueItem));
   }
-  return byRepo;
+  return result;
 }

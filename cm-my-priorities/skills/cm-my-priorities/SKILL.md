@@ -24,14 +24,15 @@ is highest priority; items with no matching label sort last).
 
 | Tool | Use |
 | --- | --- |
-| `list_priorities` | Produces the markdown summary, grouped by repo. |
+| `list_priorities` | Produces the actionable markdown report (summary, Do next, tables). |
 | `get_config` / `set_config` | Change the ordered `priorityLabels` or `waitingLabels` list. |
 
 ## Flow
 
 1. User asks what's on their plate ("what are my priorities", "anything need my review").
 2. Call `list_priorities`.
-3. Present the returned markdown as-is — grouped by repo with the three sections above.
+3. Present the returned markdown as-is — summary line, Do next shortlist, then the
+   Assigned issues / Awaiting review / Open priority issues sections.
 4. This plugin only lists candidates for pickup; it does not self-assign issues. Tell the
    user to assign themselves on GitHub if they want to pick one up.
 
