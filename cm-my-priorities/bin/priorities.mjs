@@ -21,13 +21,12 @@ switch (cmd) {
   }
   case 'set-config': {
     const patch = {};
-    if (arg('reposRoot')) patch.reposRoot = arg('reposRoot');
     const labels = arg('priorityLabels');
     if (labels) patch.priorityLabels = labels.split(',').map((s) => s.trim()).filter(Boolean);
     console.log(JSON.stringify(saveConfig(patch), null, 2));
     break;
   }
   default:
-    console.log('Usage: priorities.mjs <list|config|set-config> [--reposRoot PATH] [--priorityLabels P0,P1,P2]');
+    console.log('Usage: priorities.mjs <list|config|set-config> [--priorityLabels P0,P1,P2]');
     process.exit(cmd ? 1 : 0);
 }

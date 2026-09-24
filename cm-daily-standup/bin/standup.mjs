@@ -23,11 +23,10 @@ switch (cmd) {
   case 'set-config': {
     const patch = {};
     if (arg('days')) patch.days = Number(arg('days'));
-    if (arg('reposRoot')) patch.reposRoot = arg('reposRoot');
     console.log(JSON.stringify(saveConfig(patch), null, 2));
     break;
   }
   default:
-    console.log('Usage: standup.mjs <generate|config|set-config> [--days N] [--reposRoot PATH]');
+    console.log('Usage: standup.mjs <generate|config|set-config> [--days N]');
     process.exit(cmd ? 1 : 0);
 }

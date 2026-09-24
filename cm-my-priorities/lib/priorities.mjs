@@ -9,10 +9,9 @@ function renderItem(item) {
 
 export function getMyPriorities(overrides = {}) {
   const config = loadConfig();
-  const reposRoot = overrides.reposRoot ?? config.reposRoot;
   const priorityLabels = overrides.priorityLabels ?? config.priorityLabels;
 
-  const repos = discoverGitHubRepos(reposRoot);
+  const repos = discoverGitHubRepos();
   const byRepo = gatherPriorities(repos, priorityLabels);
   const repoNames = [...byRepo.keys()].sort((a, b) => a.localeCompare(b));
 

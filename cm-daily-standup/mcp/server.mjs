@@ -19,7 +19,7 @@ const TOOLS = [
   },
   {
     name: 'get_config',
-    description: 'Read standup configuration: default days window and repos root directory.',
+    description: 'Read standup configuration: default days window.',
     inputSchema: { type: 'object', properties: {} },
   },
   {
@@ -29,7 +29,6 @@ const TOOLS = [
       type: 'object',
       properties: {
         days: { type: 'number', description: 'Default rolling window in days.' },
-        reposRoot: { type: 'string', description: 'Directory to auto-discover git repos under.' },
       },
     },
   },

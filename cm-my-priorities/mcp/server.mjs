@@ -14,7 +14,7 @@ const TOOLS = [
   },
   {
     name: 'get_config',
-    description: 'Read priorities configuration: repos root directory and the priority label list (ranked, first = highest).',
+    description: 'Read priorities configuration: the priority label list (ranked, first = highest).',
     inputSchema: { type: 'object', properties: {} },
   },
   {
@@ -23,7 +23,6 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        reposRoot: { type: 'string', description: 'Directory to auto-discover git repos under.' },
         priorityLabels: {
           type: 'array',
           items: { type: 'string' },

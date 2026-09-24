@@ -12,7 +12,6 @@ const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
 
 // Order matters: earlier labels rank higher (P0 above P1, etc).
 const DEFAULTS = {
-  reposRoot: path.join(os.homedir(), 'Code'),
   priorityLabels: ['P0', 'P1', 'P2', 'priority', 'critical'],
 };
 

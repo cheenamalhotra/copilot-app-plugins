@@ -13,14 +13,13 @@ function mergeInto(combined, byRepo, bucket) {
 export function generateStandup(overrides = {}) {
   const config = loadConfig();
   const days = overrides.days ?? config.days;
-  const reposRoot = overrides.reposRoot ?? config.reposRoot;
 
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   const sinceIso = since.toISOString();
   const sinceDate = sinceIso.slice(0, 10);
 
   const combined = new Map();
-  mergeInto(combined, gatherGitActivity(reposRoot, days), 'commits');
+  mergeInto(combined, gatherGitActivity(days), 'commits');
   mergeInto(combined, gatherGitHubActivity(sinceDate), 'prs');
   mergeInto(combined, gatherSessionActivity(sinceIso), 'sessions');
 
@@ -29,7 +28,7 @@ export function generateStandup(overrides = {}) {
   let md = `# Standup — last ${days} day${days === 1 ? '' : 's'}\n\n`;
   if (!repos.length) {
     md += '_No git commits, GitHub activity, or Copilot App sessions found in this window._\n';
-    return { markdown: md, days, reposRoot, repoCount: 0 };
+    return { markdown: md, days, repoCount: 0 };
   }
 
   for (const repo of repos) {
@@ -68,5 +67,5 @@ export function generateStandup(overrides = {}) {
     }
   }
 
-  return { markdown: md.trim() + '\n', days, reposRoot, repoCount: repos.length };
+  return { markdown: md.trim() + '\n', days, repoCount: repos.length };
 }

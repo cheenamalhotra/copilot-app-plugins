@@ -1,6 +1,6 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { listRepoCheckouts } from './copilot-projects.mjs';
 
 function run(cwd, args) {
   try {
@@ -10,36 +10,12 @@ function run(cwd, args) {
   }
 }
 
-/** Repo display name: "owner/repo" from the origin remote when it's GitHub, else the folder name. */
-function repoKey(dir) {
+/** Best-effort repo display key when the Copilot App project has no linked GitHub repo. */
+function fallbackRepoKey(dir) {
   const url = run(dir, ['remote', 'get-url', 'origin']);
   const match = url.match(/github\.com[:/]([^/]+\/[^/]+?)(\.git)?$/);
   if (match) return match[1];
   return path.basename(dir);
-}
-
-/** Find git repo roots under `root`, up to `maxDepth` levels deep (handles nested worktree layouts). */
-export function discoverRepos(root, maxDepth = 3) {
-  const found = new Set();
-  function walk(dir, depth) {
-    if (depth > maxDepth) return;
-    let entries;
-    try {
-      entries = fs.readdirSync(dir, { withFileTypes: true });
-    } catch {
-      return;
-    }
-    if (entries.some((e) => e.name === '.git')) {
-      found.add(dir);
-      return; // don't descend into a repo's own subdirectories
-    }
-    for (const e of entries) {
-      if (!e.isDirectory() || e.name.startsWith('.')) continue;
-      walk(path.join(dir, e.name), depth + 1);
-    }
-  }
-  walk(root, 0);
-  return [...found];
 }
 
 export function authorEmail() {
@@ -67,16 +43,25 @@ export function commitsSince(dir, sinceIso, email) {
     });
 }
 
-export function gatherGitActivity(root, days) {
+/** Git commits across every repo/worktree checkout Copilot App knows about. */
+export function gatherGitActivity(days) {
   const email = authorEmail();
   const since = `${days} days ago`;
   const byRepo = new Map();
-  for (const dir of discoverRepos(root)) {
-    const commits = commitsSince(dir, since, email);
+  const seenHashes = new Map(); // repoKey -> Set(hash), so main + worktree checkouts don't double-count
+
+  for (const checkout of listRepoCheckouts()) {
+    const commits = commitsSince(checkout.path, since, email);
     if (!commits.length) continue;
-    const key = repoKey(dir);
+    const key = checkout.nameWithOwner || fallbackRepoKey(checkout.path);
     if (!byRepo.has(key)) byRepo.set(key, []);
-    byRepo.get(key).push(...commits);
+    if (!seenHashes.has(key)) seenHashes.set(key, new Set());
+    const seen = seenHashes.get(key);
+    for (const commit of commits) {
+      if (seen.has(commit.hash)) continue;
+      seen.add(commit.hash);
+      byRepo.get(key).push(commit);
+    }
   }
   return byRepo;
 }

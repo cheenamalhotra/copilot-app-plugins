@@ -4,7 +4,7 @@ A Copilot App plugin that lists your top-priority GitHub work across every repo 
 have locally: issues assigned to you, PRs awaiting your review, and open unassigned
 priority issues you could pick up.
 
-No extra accounts or tokens: it discovers repos from your local git checkouts and
+No extra accounts or tokens: it discovers repos from your Copilot App projects and
 uses the `gh` CLI you're likely already authenticated with.
 
 ## Install
@@ -26,11 +26,11 @@ Ask Copilot in any session:
 | Tool | Use |
 | --- | --- |
 | `list_priorities` | Builds the markdown summary, grouped by repo. |
-| `get_config` / `set_config` | Change `reposRoot` or the ordered `priorityLabels` list. |
+| `get_config` / `set_config` | Change the ordered `priorityLabels` list. |
 
 ## How it works
 
-For every local repo under `reposRoot` (default `~/Code`) with a `github.com` origin:
+For every Copilot App project with a linked GitHub repo:
 
 | Section | Query |
 | --- | --- |
@@ -53,7 +53,8 @@ Assign yourself on GitHub once you've picked one up.
 mcp/server.mjs                  MCP stdio server (3 tools, zero dependencies)
 bin/priorities.mjs              CLI entry point
 lib/config.mjs                  config load/save
-lib/repos.mjs                   discovers local repos with a GitHub origin
+lib/repos.mjs                   discovers Copilot App projects with a GitHub repo
+lib/copilot-projects.mjs        read-only Copilot App project/worktree discovery
 lib/github.mjs                  gh CLI queries + priority ranking
 lib/priorities.mjs              merges sources, renders markdown
 skills/cm-my-priorities/         skill that drives the flow

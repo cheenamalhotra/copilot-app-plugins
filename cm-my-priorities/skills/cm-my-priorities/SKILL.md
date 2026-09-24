@@ -5,8 +5,8 @@ description: List top-priority GitHub work across your repos - issues assigned t
 
 # My Priorities
 
-Scans every local git repo with a GitHub origin (under your configured `reposRoot`, default
-`~/Code`) via the `gh` CLI and surfaces three things per repo:
+Scans every Copilot App project with a linked GitHub repo via the `gh` CLI and
+surfaces three things per repo:
 
 - **Assigned to you** — open issues where you're the assignee.
 - **Awaiting your review** — open PRs where your review has been requested.
@@ -21,7 +21,7 @@ is highest priority; items with no matching label sort last).
 | Tool | Use |
 | --- | --- |
 | `list_priorities` | Produces the markdown summary, grouped by repo. |
-| `get_config` / `set_config` | Change `reposRoot` or the ordered `priorityLabels` list. |
+| `get_config` / `set_config` | Change the ordered `priorityLabels` list. |
 
 ## Flow
 
@@ -31,5 +31,5 @@ is highest priority; items with no matching label sort last).
 4. This plugin only lists candidates for pickup; it does not self-assign issues. Tell the
    user to assign themselves on GitHub if they want to pick one up.
 
-Nothing is written anywhere; only `gh` (GitHub CLI, already authenticated) and your local
-git repos are read.
+Nothing is written anywhere; only `gh` (GitHub CLI, already authenticated) and your
+Copilot App project data are read.

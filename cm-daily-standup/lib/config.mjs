@@ -12,7 +12,6 @@ const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
 
 const DEFAULTS = {
   days: 1,
-  reposRoot: path.join(os.homedir(), 'Code'),
 };
 
 function ensureDataDir() {
