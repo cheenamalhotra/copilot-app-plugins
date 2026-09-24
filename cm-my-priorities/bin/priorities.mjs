@@ -23,10 +23,12 @@ switch (cmd) {
     const patch = {};
     const labels = arg('priorityLabels');
     if (labels) patch.priorityLabels = labels.split(',').map((s) => s.trim()).filter(Boolean);
+    const waiting = arg('waitingLabels');
+    if (waiting) patch.waitingLabels = waiting.split(',').map((s) => s.trim()).filter(Boolean);
     console.log(JSON.stringify(saveConfig(patch), null, 2));
     break;
   }
   default:
-    console.log('Usage: priorities.mjs <list|config|set-config> [--priorityLabels P0,P1,P2]');
+    console.log('Usage: priorities.mjs <list|config|set-config> [--priorityLabels P0,P1,P2] [--waitingLabels "waiting for customer,stale"]');
     process.exit(cmd ? 1 : 0);
 }

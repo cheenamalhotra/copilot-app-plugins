@@ -13,6 +13,9 @@ const CONFIG_FILE = path.join(DATA_DIR, 'config.json');
 // Order matters: earlier labels rank higher (P0 above P1, etc).
 const DEFAULTS = {
   priorityLabels: ['P0', 'P1', 'P2', 'priority', 'critical'],
+  // Exact label names (case-insensitive) that mean an issue is waiting on someone else.
+  // Labels not in this list still get picked up by a generic waiting/blocked/stale pattern.
+  waitingLabels: ['waiting for customer', 'needs-author-feedback', 'more information needed'],
 };
 
 function ensureDataDir() {

@@ -9,12 +9,12 @@ const TOOLS = [
   {
     name: 'list_priorities',
     description:
-      'List your top-priority work across all GitHub repos you have locally: open issues assigned to you, open PRs awaiting your review, and open unassigned issues matching your priority labels that you could pick up. Grouped by repo, sorted by priority label rank.',
+      'List your top-priority work across all GitHub repos you have locally: open issues assigned to you, open PRs awaiting your review, and open unassigned issues matching your priority labels that you could pick up. Grouped by repo, sorted by priority label rank. Each item includes a best-effort status (e.g. "Has PR #123", "Waiting for customer", "Draft", "Approved").',
     inputSchema: { type: 'object', properties: {} },
   },
   {
     name: 'get_config',
-    description: 'Read priorities configuration: the priority label list (ranked, first = highest).',
+    description: 'Read priorities configuration: the priority label list (ranked, first = highest) and waiting-on-someone-else labels.',
     inputSchema: { type: 'object', properties: {} },
   },
   {
@@ -27,6 +27,11 @@ const TOOLS = [
           type: 'array',
           items: { type: 'string' },
           description: 'Ordered list of label names, highest priority first (e.g. ["P0","P1","P2","priority","critical"]).',
+        },
+        waitingLabels: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Label names that mean an issue is waiting on someone else (e.g. customer, more info). Case-insensitive exact match; a generic waiting/blocked/stale pattern is also applied as a fallback.',
         },
       },
     },

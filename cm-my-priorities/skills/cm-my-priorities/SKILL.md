@@ -13,6 +13,10 @@ surfaces three things per repo:
 - **Open priority issues you could pick up** — open, unassigned issues that match one of
   your configured priority labels (default: `P0, P1, P2, priority, critical`).
 
+Every item shows a best-effort status: issues get `Has PR #123` when one's already linked,
+a matching `waitingLabels` entry (or a generic waiting/blocked/stale label) otherwise, or
+`Open`; PRs get `Draft`, `Changes requested`, `Approved`, or `Review requested`.
+
 Items are sorted by priority label rank (the label's position in the config list — first
 is highest priority; items with no matching label sort last).
 
@@ -21,7 +25,7 @@ is highest priority; items with no matching label sort last).
 | Tool | Use |
 | --- | --- |
 | `list_priorities` | Produces the markdown summary, grouped by repo. |
-| `get_config` / `set_config` | Change the ordered `priorityLabels` list. |
+| `get_config` / `set_config` | Change the ordered `priorityLabels` or `waitingLabels` list. |
 
 ## Flow
 

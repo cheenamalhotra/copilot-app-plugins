@@ -4,15 +4,17 @@ import { gatherPriorities } from './github.mjs';
 
 function renderItem(item) {
   const labelTag = item.rank >= 0 ? ` \`${item.labels.join(', ')}\`` : '';
-  return `- [#${item.number}](${item.url}) ${item.title}${labelTag}\n`;
+  const statusTag = item.status ? ` — *${item.status.text}*` : '';
+  return `- [#${item.number}](${item.url}) ${item.title}${labelTag}${statusTag}\n`;
 }
 
 export function getMyPriorities(overrides = {}) {
   const config = loadConfig();
   const priorityLabels = overrides.priorityLabels ?? config.priorityLabels;
+  const waitingLabels = overrides.waitingLabels ?? config.waitingLabels;
 
   const repos = discoverGitHubRepos();
-  const byRepo = gatherPriorities(repos, priorityLabels);
+  const byRepo = gatherPriorities(repos, priorityLabels, waitingLabels);
   const repoNames = [...byRepo.keys()].sort((a, b) => a.localeCompare(b));
 
   let md = `# My priorities\n\n`;

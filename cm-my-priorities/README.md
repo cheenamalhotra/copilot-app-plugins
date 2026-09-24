@@ -26,7 +26,7 @@ Ask Copilot in any session:
 | Tool | Use |
 | --- | --- |
 | `list_priorities` | Builds the markdown summary, grouped by repo. |
-| `get_config` / `set_config` | Change the ordered `priorityLabels` list. |
+| `get_config` / `set_config` | Change the ordered `priorityLabels` or `waitingLabels` list. |
 
 ## How it works
 
@@ -37,6 +37,12 @@ For every Copilot App project with a linked GitHub repo:
 | Assigned to you | `gh issue list --assignee @me --state open` |
 | Awaiting your review | `gh pr list --search "review-requested:@me" --state open` |
 | Open priority issues to pick up | `gh issue list --search "no:assignee" --state open`, filtered to issues carrying one of `priorityLabels` |
+
+Every item shows a best-effort **status**:
+
+- Issues: `Has PR #123` (already has a linked/closing PR), a matching `waitingLabels`
+  entry or a generic waiting/blocked/stale-labeled name, or `Open`.
+- PRs: `Draft`, `Changes requested`, `Approved`, or `Review requested`.
 
 Items are sorted by priority rank: the label's position in your configured
 `priorityLabels` list (default `["P0","P1","P2","priority","critical"]`) — first

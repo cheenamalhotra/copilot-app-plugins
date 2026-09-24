@@ -31,45 +31,84 @@ function labelNames(labels) {
   return (labels || []).map((l) => l.name);
 }
 
-const JSON_FIELDS = 'number,title,url,labels,updatedAt';
+// Fallback pattern for "waiting on someone else" labels when a repo's label isn't in
+// the configured waitingLabels list (repos name these differently: "needs-author-feedback",
+// "waiting for customer", "more-information-needed", "stale", etc).
+const WAITING_LABEL_PATTERN = /waiting|needs?[\s-]?(feedback|info|response|author)|no[\s-]?repro|blocked|on[\s-]?hold|stale/i;
+
+/** Best-effort issue status: linked PR takes priority over a "waiting on X" label. */
+function issueStatus(issue, waitingLabels) {
+  const linkedPRs = (issue.closedByPullRequestsReferences || []).map((pr) => pr.number);
+  if (linkedPRs.length) return { text: `Has PR #${linkedPRs.join(', #')}`, kind: 'has-pr' };
+
+  const waitingSet = new Set((waitingLabels || []).map((l) => l.toLowerCase()));
+  const match = (issue.labels || []).find(
+    (l) => waitingSet.has(l.name.toLowerCase()) || WAITING_LABEL_PATTERN.test(l.name),
+  );
+  if (match) return { text: match.name, kind: 'waiting' };
+
+  return { text: 'Open', kind: 'open' };
+}
+
+/** Best-effort PR status from review state. */
+function prStatus(pr) {
+  if (pr.isDraft) return { text: 'Draft', kind: 'draft' };
+  if (pr.reviewDecision === 'CHANGES_REQUESTED') return { text: 'Changes requested', kind: 'changes-requested' };
+  if (pr.reviewDecision === 'APPROVED') return { text: 'Approved', kind: 'approved' };
+  return { text: 'Review requested', kind: 'review-requested' };
+}
+
+const ISSUE_FIELDS = 'number,title,url,labels,updatedAt,closedByPullRequestsReferences';
+const PR_FIELDS = 'number,title,url,labels,updatedAt,isDraft,reviewDecision';
 
 /**
  * For each repo, gathers:
  *  - assigned: open issues assigned to you
  *  - reviewRequested: open PRs where your review is requested
  *  - pickable: open, unassigned issues matching a priority label
- * Each item carries a `rank` (label index, -1 = unranked) for sorting; results within
- * each bucket are sorted by rank ascending (unranked last).
+ * Each item carries a `rank` (label index, -1 = unranked) for sorting and a `status`
+ * (e.g. "Has PR #123", "Waiting for customer", "Draft", "Review requested"). Results
+ * within each bucket are sorted by rank ascending (unranked last).
  */
-export function gatherPriorities(repos, priorityLabels) {
+export function gatherPriorities(repos, priorityLabels, waitingLabels) {
   const byRepo = new Map();
   if (!hasGh()) return byRepo;
 
   for (const repo of repos) {
-    const assigned = ghJson(['issue', 'list', '-R', repo, '--assignee', '@me', '--state', 'open', '--json', JSON_FIELDS, '--limit', '50']);
-    const reviewRequested = ghJson(['pr', 'list', '-R', repo, '--search', 'review-requested:@me', '--state', 'open', '--json', JSON_FIELDS, '--limit', '50']);
-    const pickable = ghJson(['issue', 'list', '-R', repo, '--search', 'no:assignee', '--state', 'open', '--json', JSON_FIELDS, '--limit', '100']).filter(
+    const assigned = ghJson(['issue', 'list', '-R', repo, '--assignee', '@me', '--state', 'open', '--json', ISSUE_FIELDS, '--limit', '50']);
+    const reviewRequested = ghJson(['pr', 'list', '-R', repo, '--search', 'review-requested:@me', '--state', 'open', '--json', PR_FIELDS, '--limit', '50']);
+    const pickable = ghJson(['issue', 'list', '-R', repo, '--search', 'no:assignee', '--state', 'open', '--json', ISSUE_FIELDS, '--limit', '100']).filter(
       (i) => priorityRank(i.labels, priorityLabels) >= 0,
     );
 
-    const toItem = (i) => ({
+    const toIssueItem = (i) => ({
       number: i.number,
       title: i.title,
       url: i.url,
       labels: labelNames(i.labels),
       rank: priorityRank(i.labels, priorityLabels),
+      status: issueStatus(i, waitingLabels),
     });
 
-    const bySortedRank = (items) => items.map(toItem).sort((a, b) => {
+    const toPrItem = (i) => ({
+      number: i.number,
+      title: i.title,
+      url: i.url,
+      labels: labelNames(i.labels),
+      rank: priorityRank(i.labels, priorityLabels),
+      status: prStatus(i),
+    });
+
+    const bySortedRank = (items) => items.sort((a, b) => {
       const ra = a.rank < 0 ? Infinity : a.rank;
       const rb = b.rank < 0 ? Infinity : b.rank;
       return ra - rb;
     });
 
     const entry = {
-      assigned: bySortedRank(assigned),
-      reviewRequested: bySortedRank(reviewRequested),
-      pickable: bySortedRank(pickable),
+      assigned: bySortedRank(assigned.map(toIssueItem)),
+      reviewRequested: bySortedRank(reviewRequested.map(toPrItem)),
+      pickable: bySortedRank(pickable.map(toIssueItem)),
     };
     if (entry.assigned.length || entry.reviewRequested.length || entry.pickable.length) {
       byRepo.set(repo, entry);
