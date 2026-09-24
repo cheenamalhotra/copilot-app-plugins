@@ -19,7 +19,7 @@ Works on macOS, Linux, and Windows.
 
 Both scripts just check prerequisites and print the steps: open Copilot App ->
 Plugins -> Manage marketplaces -> Add source -> this folder's path -> install
-"worktree-janitor" -> restart Copilot App.
+"cm-worktree-janitor" -> restart Copilot App.
 
 ## Use
 

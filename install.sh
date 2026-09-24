@@ -22,7 +22,7 @@ Works on macOS, Linux, and Windows.
 Install it via the app UI:
   1. Open Copilot App -> Plugins -> Manage marketplaces
   2. Add source: $PLUGIN_DIR
-  3. Install "worktree-janitor" from that marketplace
+  3. Install "cm-worktree-janitor" from that marketplace
   4. Restart Copilot App
 
 Then ask: "review my worktrees"

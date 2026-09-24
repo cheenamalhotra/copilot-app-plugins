@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "worktree-janitor",
+      "name": "cm-worktree-janitor",
       "source": "./",
       "description": "Finds obsolete git worktrees left behind by Copilot App sessions, runs on a schedule, and deletes only what you select and confirm.",
       "version": "1.0.0",
