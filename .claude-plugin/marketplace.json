@@ -1,7 +1,7 @@
 {
-  "name": "worktree-janitor-marketplace",
+  "name": "cm-copilot-plugins",
   "metadata": {
-    "description": "Local marketplace for the worktree-janitor plugin.",
+    "description": "Cheena Malhotra's Copilot App plugin marketplace.",
     "version": "1.0.0"
   },
   "owner": {
