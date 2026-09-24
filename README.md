@@ -10,5 +10,6 @@ Plugins -> Manage marketplaces -> Add source.
 | --- | --- |
 | [cm-worktree-cleanup](./cm-worktree-cleanup) | Finds obsolete git worktrees left by Copilot App sessions, scans on a schedule, deletes only what you select and confirm. |
 | [cm-daily-standup](./cm-daily-standup) | Generates a standup summary from your git commits, GitHub PRs/issues, and Copilot App sessions. |
+| [cm-my-priorities](./cm-my-priorities) | Lists issues/PRs assigned to you or awaiting your review, plus open priority issues you could pick up. |
 
 Each plugin has its own README with install/usage details.

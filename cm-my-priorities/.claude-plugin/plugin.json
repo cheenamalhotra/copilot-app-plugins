@@ -1,0 +1,12 @@
+{
+  "name": "cm-my-priorities",
+  "description": "Lists top-priority issues and PRs assigned or requiring your review across your repos, plus open unassigned priority issues you could pick up.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Cheena Malhotra"
+  },
+  "license": "MIT",
+  "keywords": ["github", "priorities", "issues", "pull-requests", "productivity"],
+  "mcpServers": "./.mcp.json",
+  "skills": ["skills/cm-my-priorities/"]
+}
