@@ -5,7 +5,7 @@ import { loadConfig, readReport, saveConfig, writeReport } from '../lib/config.m
 import { publicView, scan } from '../lib/scan.mjs';
 import { installSchedule, scheduleStatus, uninstallSchedule } from '../lib/schedule.mjs';
 
-const SERVER_INFO = { name: 'worktree-janitor', version: '1.0.0' };
+const SERVER_INFO = { name: 'cm-worktree-cleanup', version: '1.0.0' };
 
 const pathsArray = {
   type: 'array',

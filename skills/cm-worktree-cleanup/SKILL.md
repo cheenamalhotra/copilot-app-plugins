@@ -1,5 +1,5 @@
 ---
-name: worktree-janitor
+name: cm-worktree-cleanup
 description: Find and clean up obsolete git worktrees left behind by Copilot App sessions. Presents candidates for review, deletes only what the user confirms, and can run scans on a schedule. WHEN "clean up worktrees", "obsolete worktrees", "stale worktrees", "delete old worktrees", "copilot worktrees taking space", "review my worktrees", "schedule worktree cleanup", "disk space from worktrees".
 ---
 

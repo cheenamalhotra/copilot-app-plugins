@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "worktree-janitor": {
+    "cm-worktree-cleanup": {
       "type": "stdio",
       "command": "node",
       "args": ["${PLUGIN_ROOT}/mcp/server.mjs"],

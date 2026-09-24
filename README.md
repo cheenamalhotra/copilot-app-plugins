@@ -106,7 +106,7 @@ lib/actions.mjs                delete / keep, with salvage
 lib/appdb.mjs                  read-only snapshot of the Copilot App database (node:sqlite)
 lib/git.mjs                    async git helpers
 lib/schedule.mjs               per-OS scheduler (launchd / systemd+cron / schtasks)
-skills/worktree-janitor/       skill that drives the review-and-confirm flow
+skills/cm-worktree-cleanup/     skill that drives the review-and-confirm flow
 ```
 
 State lives in `~/.copilot/plugin-data/_direct/worktree-janitor/`:

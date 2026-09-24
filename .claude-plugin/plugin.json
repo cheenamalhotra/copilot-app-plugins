@@ -8,5 +8,5 @@
   "license": "MIT",
   "keywords": ["worktree", "cleanup", "git", "maintenance", "disk-space"],
   "mcpServers": "./.mcp.json",
-  "skills": ["skills/worktree-janitor/"]
+  "skills": ["skills/cm-worktree-cleanup/"]
 }
