@@ -1,0 +1,12 @@
+{
+  "name": "cm-daily-standup",
+  "description": "Generates a daily standup summary from your git commits, GitHub PRs/issues, and Copilot App sessions.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Cheena Malhotra"
+  },
+  "license": "MIT",
+  "keywords": ["standup", "git", "github", "productivity"],
+  "mcpServers": "./.mcp.json",
+  "skills": ["skills/cm-daily-standup/"]
+}

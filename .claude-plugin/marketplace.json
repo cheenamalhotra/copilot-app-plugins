@@ -10,13 +10,24 @@
   "plugins": [
     {
       "name": "cm-worktree-cleanup",
-      "source": "./",
+      "source": "./cm-worktree-cleanup",
       "description": "Finds obsolete git worktrees left behind by Copilot App sessions, runs on a schedule, and deletes only what you select and confirm.",
       "version": "1.0.0",
       "author": {
         "name": "Cheena Malhotra"
       },
       "keywords": ["worktree", "cleanup", "git", "maintenance", "disk-space"],
+      "license": "MIT"
+    },
+    {
+      "name": "cm-daily-standup",
+      "source": "./cm-daily-standup",
+      "description": "Generates a daily standup summary from your git commits, GitHub PRs/issues, and Copilot App sessions.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Cheena Malhotra"
+      },
+      "keywords": ["standup", "git", "github", "productivity"],
       "license": "MIT"
     }
   ]
