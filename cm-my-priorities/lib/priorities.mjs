@@ -36,13 +36,32 @@ function truncate(title, max = 72) {
 
 function tableRow(item) {
   const link = item._kind === 'issue' ? `[#${item.number}](${item.url})` : `[PR #${item.number}](${item.url})`;
-  return `| ${item.repo} | ${link} | ${item.status.text} | ${truncate(item.title)} |`;
+  return `| ${link} | ${item.status.text} | ${truncate(item.title)} |`;
+}
+
+// Groups items by repo while preserving overall order: the repo of the first (highest
+// priority) item leads, then the next repo not yet seen, and so on.
+function groupByRepo(items) {
+  const order = [];
+  const groups = new Map();
+  for (const item of items) {
+    if (!groups.has(item.repo)) {
+      groups.set(item.repo, []);
+      order.push(item.repo);
+    }
+    groups.get(item.repo).push(item);
+  }
+  return order.map((repo) => ({ repo, items: groups.get(repo) }));
 }
 
 function table(items) {
   if (!items.length) return '_None found._\n';
-  let md = '| Repo | # | Status | Title |\n| --- | --- | --- | --- |\n';
-  for (const item of items) md += `${tableRow(item)}\n`;
+  let md = '';
+  for (const { repo, items: repoItems } of groupByRepo(items)) {
+    md += `**${repo}**\n\n| # | Status | Title |\n| --- | --- | --- |\n`;
+    for (const item of repoItems) md += `${tableRow(item)}\n`;
+    md += '\n';
+  }
   return md;
 }
 
