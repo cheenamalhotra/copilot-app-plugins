@@ -42,7 +42,20 @@ export function generateStandup(overrides = {}) {
     }
     if (prs.length) {
       md += `**PRs / Issues**\n`;
-      for (const p of prs) md += `- [${p.kind} #${p.number}](${p.url}) ${p.title} _(${p.state})_\n`;
+      const order = ['Opened', 'Updated', 'Reviewed', 'Merged', 'Closed', 'Commented'];
+      const byAction = new Map();
+      for (const p of prs) {
+        for (const action of p.actions ?? ['Updated']) {
+          if (!byAction.has(action)) byAction.set(action, []);
+          byAction.get(action).push(p);
+        }
+      }
+      for (const action of order) {
+        const items = byAction.get(action);
+        if (!items?.length) continue;
+        md += `- ${action}:\n`;
+        for (const p of items) md += `  - [${p.kind} #${p.number}](${p.url}) ${p.title}\n`;
+      }
       md += '\n';
     }
     if (sessions.length) {
